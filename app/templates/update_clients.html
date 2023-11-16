@@ -1,0 +1,430 @@
+{% extends "clients_page.html" %}
+
+{% block title %}
+	<title>Registar Cliente</title>
+{% endblock %}
+
+{% block inner_style %}
+    <style>
+        .form-div {
+            width: 90%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+            border: 0.1em solid #46ACC2;
+        }
+        .form-div h6 {
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            margin-bottom: 7px;
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 0.1em solid #ccc;
+        }
+        .form-row-div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .outer-form-row {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        .out-form-row-emprestimo {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .outer-form-row-payment-plan {
+            width: 100%;
+        }
+        .warranties {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .warranties table {
+            width: 70%;
+        }
+        .warranties button {
+            margin-top: 10px;
+        }
+        .form-row {
+            width: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 5px;
+        }
+        .form-row label {
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .remove-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0px;
+            border: 0px;
+            background-color: red;
+            border: 1px solid red;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        table {
+			border-collapse: collapse;
+			width: 100%;
+			background-color: white;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		}
+		tr {
+			border-bottom: 1px solid #ccc;
+		}
+		th {
+			text-align: left;
+			font-size: 12px;
+		}
+		th, td {
+			padding: 5px;
+            text-align: center !important;
+		}
+		td {
+			font-size: 13px;
+		}
+        .number-field {
+            width: 70px !important;
+        }
+        .empty-td {
+            text-align: center;
+            color:#ed6e6e;
+            font-weight:bold;
+        }
+    </style>
+{% endblock %}
+
+{% block client_section %}
+    <h3>Actualizar Dados Cliente</h3>
+    <form method="post" class="form-div" enctype="multipart/form-data">
+        <h6>Dados Pessoais</h6>
+        <div class="outer-form-row">
+            <div class="form-row">
+                <label for="id_first_name">Primeiro nome</label>
+                {{ form.first_name }}
+            </div>
+            <div class="form-row">
+                <label for="id_last_name">Ultimo nome</label>
+                {{ form.last_name }}
+            </div>
+            <div class="form-row">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="form-row">
+                <label for="id_phone_number">Numero de telefone</label>
+                {{ form.phone_number }}
+            </div>
+        </div>
+        <div class="outer-form-row">
+            <div class="form-row">
+                <label for="id_phone_number2">Numero de telefone 2</label>
+                {{ form.phone_number2 }}
+            </div>
+            <div class="form-row">
+                <label for="id_job_title">Funcao</label>
+                {{ form.job_title }}
+            </div>
+            <div class="form-row">
+                <label for="id_company">Empresa</label>
+                {{ form.company}}
+            </div>
+            
+            <!--
+            <div class="form-row">
+                <label for="id_id_document">Documento de Identificacao</label>
+                {{ form.id_document }}
+            </div>
+            <div class="form-row">
+                <label for="id_contract">Contracto</label>
+                {{ form.contract }}
+            </div>
+            -->
+        </div>
+        <h6>Dados de Financiamento</h6>
+        <div class="out-form-row-emprestimo">
+            <div class="form-row-div">
+                <div class="form-row">
+                    <label for="id_amount_requested">Valor Requisitado</label>
+                    {{ form.amount_requested}}
+                </div>
+                <div class="form-row">
+                    <label for="id_interest_rate">Taxa de Esforco</label>
+                    <span>
+                        {{ form.interest_rate}}%
+                    </span>
+                </div>
+            </div>
+            <div class="form-row-div">
+                <div class="form-row">
+                    <label for="id_months_to_repay">Periodo para Liquidar</label>
+                    {{ form.months_to_repay }}
+                </div>
+                <div class="form-row">
+                    <label for="id_starting_month">Inicio de Pagamento</label>
+                    {{ form.starting_month }}
+                </div>
+            </div>
+        </div>
+        <h6>Plano de Pagamento</h6>
+        <div class="outer-form-row-payment-plan">
+            <br><br>
+            <div class="table-div">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Valor remanescente</th>
+                            <th class="interest-rate">Juros ({{ form.interest_rate.value }})%</th>
+                            <th>Valor mensal</th>
+                            <td colspan="2" style="text-align:center;">Liquidou</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4" class="empty-td">
+                                <!--
+                                {% if starting_month %}
+                                    Mes de inicio: {{ starting_month|date:"d-m-Y" }}</td>
+                                {% endif %}
+                                -->
+                            <td style="border-left: 1px solid #ccc; text-align:center;">
+                                Juros
+                            </td>
+                            <td style="border-left: 1px solid #ccc; text-align:center;">
+                                Base
+                            </td>
+                        </tr>
+                        
+                        {% for row in payments %}
+                            <tr class="table-row">
+                                <td>{{ row.date_paid|date:"d-m-Y" }}</td>
+                                <td>{{ row.remaining_amount }}</td>
+                                <td>{{ row.interest_paid }}</td>
+                                <td>{{ row.base_amount_paid }}</td>
+                                <td style="border-left: 1px solid #ccc; text-align:center;" class="yes-or-no">
+                                    {% if row.already_paid_interest %}
+                                        <span class="yes">Sim</span>
+                                    {% else %}
+                                        <span class="no">Nao</span>
+                                    {% endif %}
+                                </td>
+                                <td style="border-left: 1px solid #ccc; text-align:center;" class="yes-or-no">
+                                    {% if row.already_paid_base_amount %}
+                                        <span class="yes">Sim</span>
+                                    {% else %}
+                                        <span class="no">Nao</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="add-repayment">Adicionar pagamento</button>
+            </div>
+        </div>
+        <div class="outer-form-row">
+            <div class="form-row">
+                {% csrf_token %}
+                <label for="">.</label>
+                <input type="submit" class="btn" value="Actualizar">
+            </div>
+        </div>
+        <!--
+        <br><br>
+        <h6>Garantias</h6>
+        <div class="outer-form-row warranties">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Artigo</th>
+                        <th>Valor Estimado</th>
+                        <th>Foto</th>
+                        <th>Remover</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+            <button class="add-warranty">Adicionar Garantia</button>
+        </div>
+        -->
+        <!--
+        <div class="outer-form-row">
+            <div class="form-row">
+                {% csrf_token %}
+                <label for="">.</label>
+                <input type="submit" value="Registar">
+            </div>
+        </div>
+        -->
+    </form>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+        let tbody = document.querySelector('tbody');
+        let addRepaymentBtn = document.querySelector('.add-repayment');
+        let yes = document.querySelectorAll('.yes');
+        let no = document.querySelectorAll('.no');
+
+        highLightTad(yes, 'teal');
+        highLightTad(no, 'red');
+        function highLightTad(tags, color) {
+            for (let tag of tags) {
+                tag.style.color = color;
+                tag.style.fontWeight = 'bold';
+            }
+        }
+
+        function formatDate(date) {
+            if (parseFloat(date) < 10) {
+                return '0' + date;
+            }
+            return date;
+        }
+
+        function currentDate() {
+            let date = new Date();
+            date = `${date.getFullYear()}-${formatDate(date.getMonth())}-${formatDate(date.getDate())}`;
+            return date;
+        }
+
+        function checkValueOrSetDefault(tag) {
+            if (tag.value === '') {
+                tag.value = 0;
+            }
+            return tag.value;
+        }
+
+        function addRepayment() {
+            let requestedAmount = "{{ form.amount_requested.value }}";
+            let clientId = "{{ client.pk }}";
+            let datePaid = document.querySelector('.date-paid');
+            let remainingAmount = "{{ remaining_amount }}";
+            let interestPaid = document.querySelector('.interest-paid');
+            interestPaid = checkValueOrSetDefault(interestPaid);
+            let baseAmountPaid = document.querySelector('.reduction-of-debt');
+            baseAmountPaid = checkValueOrSetDefault(baseAmountPaid);
+            let hasPaidBaseAmount;
+            if (parseFloat(baseAmountPaid) > 0) {
+                hasPaidBaseAmount = 'checked';
+            } else {
+                hasPaidBaseAmount = 'not checked';
+            }
+            
+            let hasPaidInterestRate;
+            if (parseFloat(interestPaid) > 0) {
+                hasPaidInterestRate = 'checked';
+            } else {
+                hasPaidInterestRate = 'not checked';
+            }
+            
+            let paymentSuccess = document.querySelector('.payment-success');
+
+            fetch(`/add-repayment/${clientId}/${requestedAmount}/${datePaid.value}/${remainingAmount}/${interestPaid}/${baseAmountPaid}/${hasPaidBaseAmount}/${hasPaidInterestRate}/`)
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    document.location.reload();
+                })
+                .catch(err => console.log(err));
+        }
+
+        addRepaymentBtn.addEventListener('click', e => {
+            e.preventDefault();
+            
+            /*
+            let allTrs = tbody.childNodes
+            for (let tr of allTrs) {
+                let classList = tr.classList
+                console.log(classList);
+            }
+            */
+
+            if (e.target.textContent == 'Adicionar pagamento') {
+                addRepaymentBtn.textContent = 'Actualizar pagamento';
+                addRepaymentBtn.style.backgroundColor = 'teal';
+                addRepaymentBtn.style.color = 'black';
+            
+                let tr = document.createElement('tr');
+                tr.innerHTML += `
+                    <td>
+                        <input type="date" class="date-paid" value="${ currentDate() }"
+                    </td>
+                    <td>{{ remaining_amount }}</td>
+                    <td>
+                        <input type="number" step="0.01" min=0 value=3000 class="number-field interest-paid">
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" min=0 value=2000 class="number-field reduction-of-debt">
+                    </td>
+                    <td style="border-left: 1px solid #ccc; text-align:center;">
+                        N/A
+                    </td>
+                    <td style="border-left: 1px solid #ccc; text-align:center;">
+                        N/A
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            } else {
+                addRepaymentBtn.textContent = 'Adicionar pagamento';
+                addRepaymentBtn.style.backgroundColor = '#46ACC2';
+                addRepaymentBtn.style.color = 'white';
+
+                
+                let interestPaid = document.querySelector('.interest-paid');
+                let reductionOfDebt =  document.querySelector('.reduction-of-debt');
+                let remainingAmount = "{{ remaining_amount }}";
+                console.log({
+                    'interest-paid': parseFloat(interestPaid.value),
+                    'reduction-of-debt': parseFloat(reductionOfDebt.value),
+                    'remaining-amount': parseFloat(remainingAmount)
+                });
+                let emptyTd = document.querySelector('.empty-td');
+                if ((parseFloat(interestPaid.value) + parseFloat(reductionOfDebt.value)) > parseFloat(remainingAmount)) {
+                    emptyTd.textContent = 'Os pagamentos nao podem ser maior que o valor remanescente';
+                } else {
+                    let confirm_ = window.confirm('Tem certeza que pretende actualizar pagamanto? ');
+                    if (confirm_) {
+                        emptyTd.textContent = '';
+                        addRepayment();
+                        tbody.innerHTML = '';
+                    } else {
+                        //
+                    }
+                }
+            }
+        });
+
+        function removeTr(className) {
+            let tag = document.querySelector(`.${className}`);
+            tbody.removeChild(tag);
+        }
+	</script>
+{% endblock %}

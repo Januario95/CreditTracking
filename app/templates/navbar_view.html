@@ -1,0 +1,36 @@
+{% load static %}
+
+<div class="Navbar">
+    <nav class="Navbar__Items Navbar__Items--right">
+        <div class="Navbar__Link Navbar__Link-brand">
+            <a href="#" class="page-logo">
+                <img class="site-logo" src="{% static 'Liceu_Avicena_2.PNG' %}">
+                <span>"Muito além do ensino"</span>
+            </a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link plano-de-pagamento" 
+                href="{% url 'app:plano_de_pagamento' %}">Plano de Pagamento</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link simulador-de-investimento" 
+                href="{% url 'app:simulador_de_investimento' %}">Simulador de Investimento</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link plano-de-pagamento" href="#">Plano de Pagamento</a>
+        </div>
+        <div class="Navbar__Link">
+            <a class="header-link clientes" href="{% url 'app:view_clients' %}">Gerenciar Clientes</a>
+        </div>
+    </nav>
+</div>
+
+
+<script>
+    function classToggle() {
+        const navs = document.querySelectorAll('.Navbar__Items');
+        navs.forEach(nav => nav.classList.toggle('Navbar__ToggleShow'));
+    }
+      
+    // document.querySelector('.Navbar__Link-toggle').addEventListener('click', classToggle);
+</script>

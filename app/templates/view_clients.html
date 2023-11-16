@@ -1,0 +1,73 @@
+{% extends "clients_page.html" %}
+
+{% block title %}
+	<title>Registar Cliente</title>
+{% endblock %}
+
+{% block inner_style %}
+    <style>
+        .view-students {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .table {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .table table {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block client_section %}
+    <div class="view-students">
+        <h4>Lista de Clientes</h4>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Primeiro nome</th>
+                        <th>Ultimo nome</th>
+                        <td>Email</td>
+                        <th>Funcao</th>
+                        <th>Numero de telefone</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td>{{ forloop.counter1 }}</td>
+                            <td>{{ client.first_name }}</td>
+                            <td>{{ client.last_name }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.job_title }}</td>
+                            <td>
+                                <a href="tel:{{ client.phone_number }}">
+                                    {{ client.phone_number }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'app:update_clients' client.pk %}">
+                                    Ver
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+	<script>
+        
+	</script>
+{% endblock %}

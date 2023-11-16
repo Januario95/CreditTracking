@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+	<title>Credit Simulation</title>
+{% endblock %}
+
+{% block style %}
+	<style>	
+		body {
+			padding-top: 0px;
+			font-family: "Verdana", sans-serif;
+		}
+		.body-div-section {
+			width: 75%;
+		}
+		.header-section,
+		.body-section {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			padding: 5px;
+		}
+		.body-section {
+			margin-top: 0px;
+			padding: 0px 10px;
+		}
+		.header-section {
+			margin-bottom: 5px;
+			padding-bottom: 0px;
+		}
+		.start-date, .end-date {
+			
+		}
+		.amount {
+			text-align: center;
+		}
+		.error {
+			font-style: italic;
+			font-size: 14px;
+			color: red;
+		}
+		table {
+			border-collapse: collapse;
+			width: 80%;
+			background-color: white;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		}
+		tr {
+			border-bottom: 1px solid #ccc;
+		}
+		th {
+			text-align: left;
+			font-size: 12px;
+		}
+		th, td {
+			padding: 5px;
+		}
+		td {
+			font-size: 13px;
+		}
+		input[type="number"],
+		input[type="month"],
+		input[type="date"],
+		input[type="button"],
+		input[type="submit"] {
+		  border: 1px solid #c4c4c4;
+		  border-radius: 5px;
+		  padding: 3px 5px;
+		  box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+		  width: 110px;
+		  height: 20px;
+		  text-align: center;
+		  outline: none;
+		}
+		input[type="number"],
+		input[type="month"] {
+			background-color: #fff;
+		}
+		input[type="button"],
+		input[type="submit"] {
+			height: 29px;
+		}
+		input[type="number"]:focus,
+		input[type="month"]:focus {
+			outline: 1px solid lightgreen;
+		}
+		.btn {
+			height: 27px;
+			cursor: pointer;
+			width: 158px;
+			color: white;
+			font-weight: bold;
+			background-color: #46ACC2;
+		}
+		.inner-header {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			background-color: white;
+			border-radius: 5px;
+			margin: 10px;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		}
+		.row {
+			padding: 5px;
+		}
+		.header-title {
+			font-size: 20px;
+			text-align: center;
+			padding: 0px;
+			border: 0px;
+		}
+		.row-inputs {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.row-input {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			margin: 0px 5px 5px 0px;
+		}
+		.row-input label {
+			font-size: 12px;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+	<div class="body-div-section">
+		<div class="header-section">
+			<form class="inner-header" method="post">
+				<div class="row">
+					<span class="header-title">Plano de Pagamento</span>
+				</div>
+				<div class="input-fields">
+					<div class="row">
+						<span class="error"></span>
+					</div>
+					<div class="row row-inputs">
+						<div class="row-input">
+							<label for="">Valor requisitado</label>
+							{{ form.amount }}
+						</div>
+						<div class="row-input">
+							<label for="">Meses a pagar</label>
+							{{ form.number_of_months }}
+						</div>
+						<div class="row-input">
+							<label for="">Taxa de juro</label>
+							{{ form.interest_rate }}
+						</div>
+					</div>
+					<div class="row row-inputs">
+						<div class="row-input">
+							<label for="">Mes de inicio</label>
+							{{ form.starting_month }}
+						</div>
+						<div class="row-input">
+							<label for="">.</label>
+							{% csrf_token %}
+							<input type="submit" class="btn" value="Gerar">
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="body-section">
+			<table>
+				<thead>
+					<tr>
+						<th>Mes</th>
+						<th>Valor</th>
+						<th>Reducao da Divida</th>
+						<th class="interest-rate">Juros ({{ interest_rate }})%</th>
+						<th>Valor mensal</th>
+						<td colspan="2" style="text-align:center;">Liquidou</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="5" style="text-align: center; color:#848282; font-weight:bold;">
+							{% if starting_month %}
+								Mes de inicio: {{ starting_month|date:"d-m-Y" }}</td>
+							{% endif %}
+						<td style="border-left: 1px solid #ccc; text-align:center;">Base</td>
+						<td style="border-left: 1px solid #ccc; text-align:center;">Juros</td>
+					</tr>
+					{% for row in data %}
+						<tr>
+							<td>{{ row.starting_month|date:"d-m-Y" }}</td>
+							<td>Valor</td>
+							<td>Reducao da Divida</td>
+							<td class="interest-rate">Juros</td>
+							<td>Valor mensal</td>
+							<td style="border-left: 1px solid #ccc; text-align:center;">X</td>
+							<td style="border-left: 1px solid #ccc; text-align:center;">Y</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascript %}
+	<!--<script src="{% static 'main.js' %}"></script>-->
+	<script>
+		let tbody = document.querySelector('tbody');
+		let btn = document.querySelector('.btn');
+		let start_date = document.querySelector('.start-date');
+		let end_date = document.querySelector('.end-date');
+		let amount = document.querySelector('.amount');
+		let interest = document.querySelector('.interest');
+		let monthly_amount = document.querySelector('.monthly_amount');
+		let interestRate = document.querySelector('.interest-rate');
+		let startingMonth = document.getElementById('id_starting_month');
+		let error = document.querySelector('.error');
+
+		startingMonth.value = '2023-11-20';
+
+		// amount.value = randomValue(100000);
+		// interest.value = randomValue(50);
+
+		function randomValue(maxVal) {
+			return Math.floor(Math.random() * maxVal);
+		}
+
+		// onUnacceptableValue(amount, 1000, 'Amount should start from 1000');
+		function onUnacceptableValue(tag, value, message) {
+			tag.addEventListener('input', e => {
+				if (parseFloat(e.target.value) < value) {
+					error.textContent = message;
+					btn.disabled = true;
+				} else {
+					error.textContent = '';
+					btn.disabled = false;
+				}
+			});
+		}
+
+		/*
+		interest.addEventListener('input', e => {
+			if (parseFloat(e.target.value) > 100) {
+				error.textContent = 'Rate should not be greater than 100';
+				btn.disabled = true;
+			} else if (parseFloat(e.target.value) < 5) {
+				error.textContent = 'Rate should not be less than 5';
+				btn.disabled = true;
+			} else {
+				error.textContent = '';
+				btn.disabled = false;
+			}
+		});
+		*/
+
+		function formatNumber(number) {
+			number =  Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number);
+			return number
+		}
+
+		// runButton();
+		function runButton() {
+			fetch(`/get_dates/${start_date.value}/${end_date.value}/${amount.value}/${interest.value}/${monthly_amount.value}/`)
+				.then(res => res.json())
+				.then(data => {
+					// console.log(data.total_monthly_amounts);
+					let message = data.message;
+					if (message) {
+						error.textContent = data.message_text;
+					} else {
+						let values = data.data;
+						message.textContent = '';
+						interestRate.textContent = `Juros (${interest.value}%)`;
+						for (let row of values) {
+							let tr = document.createElement('tr');
+							tr.innerHTML += `
+								<tr>
+									<td>${ row.month }</td>
+									<td>${ formatNumber(row.amount) }</td>
+									<td>${ formatNumber(row.final) }</td>
+									<td>${ formatNumber(row.yield) }</td>
+									<td>${ formatNumber(row.amount_injected) }</td>
+								</tr>
+							`;
+							tbody.appendChild(tr);
+						}
+						let lastTr = document.createElement('tr');
+						lastTr.innerHTML = `
+							<td colspan="3"></td>
+							<th>Total invested</th>
+							<td>${ formatNumber(data.total_monthly_amounts) }</td>
+						`;
+						tbody.appendChild(lastTr);
+					}
+				})
+				.catch(err => console.log(err));
+		}
+
+		/*
+		btn.addEventListener('click', e => {
+			e.preventDefault();
+
+			tbody.innerHTML = '';
+			runButton();
+		});
+		*/
+	</script>
+{% endblock %}
